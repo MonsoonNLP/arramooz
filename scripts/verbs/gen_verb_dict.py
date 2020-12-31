@@ -1,4 +1,3 @@
-#!/usr/bin/python2
 # -*- coding=utf-8 -*-
 #************************************************************************
 # $Id:generateverbdict.py,v 0.7 2009/06/02 01:10:00 Taha Zerrouki $
@@ -30,12 +29,12 @@ MAX_LINES_TREATED=1100000;
 def grabargs():
     parser = argparse.ArgumentParser(description='Convert Noun dictionary to other format.')
     # add file name to import and filename to export
-    
+
     parser.add_argument("-f", dest="filename", required=True,
     help="input file to convert", metavar="FILE")
     parser.add_argument("-t", dest="triverbfilename", required=True,
     help="input file to convert which contain triverbs information", metavar="TRI verb FILE")
-    
+
     parser.add_argument("-v", dest="version", nargs='?',
     help="Release version", metavar="Version")
 
@@ -73,7 +72,6 @@ class verb_reader:
             return True;
         elif verb_cat in ( "Pu", "Su", "Sv",  "u", "v") :
             return False;
-        # used to handle sarf data base ك مشترك، ل لازم، ميم متعدي
         elif verb_cat in (araby.MEEM, araby.KAF):
             return True
         elif verb_cat in (araby.LAM,):
@@ -102,13 +100,13 @@ class verb_reader:
     جامد    M
     فعل لاشخصي  I
     ماضي + مضارع    S
-        ينصرف في الزمن المضارع والماضي فقط 
+        ينصرف في الزمن المضارع والماضي فقط
     مبني للمجهول فقط    D
         ينصرف في الزمن المبني للمجهول فقط
     مضارع + أمر R
-        ينصرف في الزمن المضارع واﻷمر فقط 
+        ينصرف في الزمن المضارع واﻷمر فقط
     """
-                                                             
+
 
 
 
@@ -119,7 +117,7 @@ class verb_reader:
         verb_field_number=2;
         root_field_number=1;
         verb_cat_field_number=3;
-        root  = self.decode_root(tuple_verb[root_field_number].strip());        
+        root  = self.decode_root(tuple_verb[root_field_number].strip());
         word  = tuple_verb[verb_field_number].strip();
 
 
@@ -127,7 +125,7 @@ class verb_reader:
             return {"text":u"#\t'%s'\tis invalid verb "%word};
         else:
 
-            model = tuple_verb[0].strip();            
+            model = tuple_verb[0].strip();
             #print word.encode("utf8")
             future_type = u"-";
             future_type = araby.name(get_future_type_entree(future_type));
@@ -211,7 +209,7 @@ class verb_reader:
                     if verb_cat in ("ywz","yz","yzw"):
                         double_trans=True;
                     if verb_cat in ("ywz", "yw", "yzw"):
-                        reflexive_trans=True;                                   
+                        reflexive_trans=True;
             else:
                 all=True;
             nb_trans=0;
@@ -220,15 +218,15 @@ class verb_reader:
             if transitive:
                 transitive=u'متعد'
                 nb_trans=1;
-                if double_trans: 
+                if double_trans:
                     nb_trans=2;
-                if think_trans: 
+                if think_trans:
                     object_type=u"عاقل";
-                if unthink_trans: 
+                if unthink_trans:
                     object_type=u"غيرع";
-                if reflexive_trans: 
+                if reflexive_trans:
                     reflexive_type=u"فلبي";
-            else: 
+            else:
                 transitive=u'لازم'
         ##    codify the tense;
             tenses = self.encode_tense(all, past, future, imperative, passive, future_moode, confirmed)
@@ -256,8 +254,8 @@ class verb_reader:
                         transitive = u"لازم"
                 else:
                     return {"text":u"#gen_verb_dict: %s error no tri verb"%word}
-                if  liste_verb:                        
-                    if len(liste_verb)>1: 
+                if  liste_verb:
+                    if len(liste_verb)>1:
                         #suggest=u"هل تقصد؟<br/>"
                         nb_case = len(liste_verb);
         # the other forms are suggested
@@ -268,19 +266,19 @@ class verb_reader:
                         future_form = get_future_form(suggested_word,suggested_haraka);
                         suggest=u"\t".join([suggest,suggested_word,u"["+suggested_haraka+u"]"]);
                 else:suggest="-"
-            verb_dict = {'nb_case': str(nb_case), 
-                 'word': word, 
-                 'tenses': tenses, 
-                 'nb_trans': nb_trans, 
-                 'suggest': suggest, 
-                 'triliteral': triliteral, 
-                 'object_type': object_type, 
-                 'verb_cat': verb_cat, 
-                 'future_type': future_type, 
-                 'model': model, 
-                 'transitive': transitive, 
-                 'root': root, 
-                 'reflexive_type': reflexive_type, 
+            verb_dict = {'nb_case': str(nb_case),
+                 'word': word,
+                 'tenses': tenses,
+                 'nb_trans': nb_trans,
+                 'suggest': suggest,
+                 'triliteral': triliteral,
+                 'object_type': object_type,
+                 'verb_cat': verb_cat,
+                 'future_type': future_type,
+                 'model': model,
+                 'transitive': transitive,
+                 'root': root,
+                 'reflexive_type': reflexive_type,
                  }
             return verb_dict
             #~ return u'\t'.join([word,triliteral,root,future_type,transitive,str(nb_trans), object_type, reflexive_type, tenses, model,str(nb_case),verb_cat, suggest])
@@ -302,26 +300,26 @@ class verb_reader:
             if future_moode: tenses+=u"ا";
             else: tenses+=u"-";
             if confirmed: tenses+=u"ن";
-            else: tenses+=u"-";             
+            else: tenses+=u"-";
         return tenses
 
     def treat_verb_table2(self, verb_table, limit):
         """ readlines and treat them"""
-        print "#total lines",len(verb_table)
-        print "#", (u'\t'.join(["word","tri",'root',"future_type","transitive","nb_trans", "object_type", "reflexive_type", "tenses", "model","nb_case","verb_cat", "suggest"])).encode('utf8');
+        print("#total lines",len(verb_table))
+        print("#", (u'\t'.join(["word","tri",'root',"future_type","transitive","nb_trans", "object_type", "reflexive_type", "tenses", "model","nb_case","verb_cat", "suggest"])).encode('utf8'));
         model=0;
         cpt = 0
         for tuple_verb in verb_table[:limit]:
             result = self.decode_verb_tuple(tuple_verb)
-            print result.encode('utf8')
-            
+            print(result)
+
     def treat_verb_table(self, verb_table, limit):
         """ readlines and treat them"""
         tritable = {}
         # duplicated verbs to be checked
         check_verbs = []
-        print "#total lines",len(verb_table)
-        print "#", (u'\t'.join(["word","tri",'root',"future_type","transitive","nb_trans", "object_type", "reflexive_type", "tenses", "model","nb_case","verb_cat", "suggest"])).encode('utf8');
+        print("#total lines",len(verb_table))
+        print("#", (u'\t'.join(["word","tri",'root',"future_type","transitive","nb_trans", "object_type", "reflexive_type", "tenses", "model","nb_case","verb_cat", "suggest"])).encode('utf8'));
         model=0;
         cpt = 0
         for tuple_verb in verb_table[:limit]:
@@ -329,9 +327,9 @@ class verb_reader:
             result_dict = self.decode_verb_tuple(tuple_verb)
             if result_dict.get("triliteral",'') != u"ثلاثي":
                 result = self.print_tuple(result_dict)
-                print result.encode('utf8')                
+                print(result)
             else:
-                # save the triverb to be used with triverb file                
+                # save the triverb to be used with triverb file
                 verb = result_dict.get('word','')
                 if verb:
                     if verb in tritable:
@@ -342,7 +340,7 @@ class verb_reader:
                     else:
                         tritable[verb] = [result_dict, ]
 
-        # print checked verbs 
+        # print checked verbs
         #~ for v in check_verbs:
             #~ for item in tritable[v]:
                 #~ print "***check****", self.print_tuple(item).encode('utf8')
@@ -353,7 +351,7 @@ class verb_reader:
         convert tuple to string
         """
         if type(vdict) is list:
-            print arepr(vdict)
+            print(arepr(vdict))
         if "text" in vdict:
             return vdict['text']
         else:
@@ -410,7 +408,7 @@ class verb_reader:
 
             if verb in self.tritable:
                 # a list of verbs
-                accepted_list = [vd for vd in self.tritable[verb] 
+                accepted_list = [vd for vd in self.tritable[verb]
                         if vd['root']==root and vd['transitive']==transitive]
                 for verb_variant in accepted_list:
                     model = verb_variant["model"]
@@ -419,22 +417,22 @@ class verb_reader:
                     nb_trans =verb_variant["nb_trans"]
                     reflexive_type =verb_variant["reflexive_type"]
                     tenses = verb_variant["tenses"]
-                    verb_dict = {'nb_case': 0,#str(nb_case), 
-                         'word': verb, 
-                         'tenses': tenses, 
-                         'nb_trans': nb_trans, 
-                         'suggest': "", 
-                         'triliteral': u"ثلاثي", 
-                         'object_type': object_type, 
-                         'verb_cat': verb_cat, 
-                         'future_type': vdict['haraka'], 
-                         'model': model, 
-                         'transitive':transitive, 
-                         'root': vdict['root'], 
-                         'reflexive_type': reflexive_type, 
+                    verb_dict = {'nb_case': 0,#str(nb_case),
+                         'word': verb,
+                         'tenses': tenses,
+                         'nb_trans': nb_trans,
+                         'suggest': "",
+                         'triliteral': u"ثلاثي",
+                         'object_type': object_type,
+                         'verb_cat': verb_cat,
+                         'future_type': vdict['haraka'],
+                         'model': model,
+                         'transitive':transitive,
+                         'root': vdict['root'],
+                         'reflexive_type': reflexive_type,
                          }
                     #~ print "***TRI****", self.print_tuple(verb_dict).encode('utf8')
-                    print self.print_tuple(verb_dict).encode('utf8')
+                    print(self.print_tuple(verb_dict).encode('utf8'))
             else:
                 model       = "NA"
                 verb_cat    = "NA"
@@ -443,25 +441,25 @@ class verb_reader:
                 reflexive_type = "NA"
                 tenses = u"يعملان"
 
-                verb_dict = {'nb_case': 0,#str(nb_case), 
-                     'word': verb, 
-                     'tenses': tenses, 
-                     'nb_trans': nb_trans, 
-                     'suggest': "", 
-                     'triliteral': u"ثلاثي", 
-                     'object_type': object_type, 
-                     'verb_cat': verb_cat, 
-                     'future_type': vdict['haraka'], 
-                     'model': model, 
-                     'transitive':transitive, 
-                     'root': vdict['root'], 
-                     'reflexive_type': reflexive_type, 
+                verb_dict = {'nb_case': 0,#str(nb_case),
+                     'word': verb,
+                     'tenses': tenses,
+                     'nb_trans': nb_trans,
+                     'suggest': "",
+                     'triliteral': u"ثلاثي",
+                     'object_type': object_type,
+                     'verb_cat': verb_cat,
+                     'future_type': vdict['haraka'],
+                     'model': model,
+                     'transitive':transitive,
+                     'root': vdict['root'],
+                     'reflexive_type': reflexive_type,
                      }
                 #~ print "***TRI*NA****", self.print_tuple(verb_dict).encode('utf8')
-                print self.print_tuple(verb_dict).encode('utf8')
+                print(self.print_tuple(verb_dict).encode('utf8'))
     def read_file(self, fl):
         """ read lines as lists from file"""
-        line=fl.readline().decode("utf");
+        line=fl.readline()
         text=u""
         verb_table=[];
         nb_field=2;
@@ -472,11 +470,11 @@ class verb_reader:
                 if len(liste)>=nb_field:
                     verb_table.append(liste);
 
-            line=fl.readline().decode("utf8");
+            line=fl.readline()
         fl.close();
         return verb_table
 
-        
+
 
 TRIVERBTABLE_INDEX = {}
 def create_index_triverbtable():
@@ -490,12 +488,12 @@ def create_index_triverbtable():
         vocverb = triverbtable.TriVerbTable[key]['verb']
         unvverb = araby.strip_harakat(vocverb)
         normverb = araby.normalize_hamza(unvverb)
-        if TRIVERBTABLE_INDEX.has_key(normverb):
+        if normverb in TRIVERBTABLE_INDEX:
             TRIVERBTABLE_INDEX[normverb].append(key)
         else:
             TRIVERBTABLE_INDEX[normverb] = [key, ]
 
-def find_alltriverb(triverb, givenharaka = araby.FATHA, 
+def find_alltriverb(triverb, givenharaka = araby.FATHA,
 vocalised_entree = False):
     """
     Find the triliteral verb in the dictionary (TriVerbTable)
@@ -507,10 +505,10 @@ vocalised_entree = False):
         - 'transitive':
     @param triverb: given verb.
     @type triverb: unicode.
-    @param givenharaka: given haraka of tuture type of the verb, 
+    @param givenharaka: given haraka of tuture type of the verb,
     default(FATHA).
     @type givenharaka: unicode.
-    @param VocalisedEntree: True if the given verb is vocalized, 
+    @param VocalisedEntree: True if the given verb is vocalized,
     default False.
     @type VocalisedEntree: Boolean.
     @return: list of triliteral verbs.
@@ -523,7 +521,7 @@ vocalised_entree = False):
         verb_nm = triverb
 
     normalized = araby.normalize_hamza(verb_nm)
-    if TRIVERBTABLE_INDEX.has_key(normalized):
+    if normalized in TRIVERBTABLE_INDEX:
         for verb_voc_id in TRIVERBTABLE_INDEX[normalized]:
             if triverb == triverbtable.TriVerbTable[verb_voc_id]['verb'] and \
              givenharaka == triverbtable.TriVerbTable[verb_voc_id]['haraka']:
@@ -534,27 +532,27 @@ vocalised_entree = False):
             else:
                 liste.append(triverbtable.TriVerbTable[verb_voc_id])
     else:
-        print "triverb has no verb"
-    return liste            
+        print("triverb has no verb")
+    return liste
 def main():
     args = grabargs()
-    
+
     filename = args.filename
     filename_3verb = args.triverbfilename
     limit= args.limit
     try:
         fl=open(filename);
     except:
-        print " Error :No such file or directory: %s" % filename
+        print(" Error :No such file or directory: %s" % filename)
         sys.exit(0)
-    print "#",filename
-    
+    print("#",filename)
+
     try:
         fl3=open(filename_3verb);
     except:
-        print " Error :No such file or directory: %s" % filename_3verb
+        print(" Error :No such file or directory: %s" % filename_3verb)
         sys.exit(0)
-    print "#",filename_3verb
+    print("#",filename_3verb)
 
     create_index_triverbtable();
     #print "len(TriVerbTable_INDEX={})", len(TriVerbTable_INDEX);
@@ -571,10 +569,3 @@ def main():
     #~ print("len(triverbtable.TriVerbTable)",len(triverbtable.TriVerbTable))
 if __name__ == "__main__":
   main()
-
-
-
-
-
-
-
